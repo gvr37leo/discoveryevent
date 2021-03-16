@@ -21,12 +21,17 @@ var queue = new EventQueue()
 //of een new event creeeren met discovery id van het originele event en die terugsturen en dat discovery ding daar naar laten luisteren en de data doorgeven naar de callback(voor multiplayer)
 
 
-queue.startDiscovery({options:[1,2,3,4]}, (cbdata) => {
+queue.listenDiscovery((data,cb) => {
 
+    cb(data.options[1])
+
+    // modal.show(data,(chosen) => {
+    //     cb(chosen)
+    // })
 })
 
-queue.listenDiscovery((data,cb) => {
-    cb(data[1])
+queue.startDiscovery({options:[1,2,3,4]}, (cbdata) => {
+    console.log(cbdata)
 })
 
 

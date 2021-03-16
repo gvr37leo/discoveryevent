@@ -1,6 +1,6 @@
 class EventSystem<T>{
     idcounter = 0
-    listeners:{id:number, cb: (data: any) => void; }[]
+    listeners:{id:number, cb: (data: any) => void; }[] = []
 
     listen(cb:(val:T) => void){
         var listener = {
