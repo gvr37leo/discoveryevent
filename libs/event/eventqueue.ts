@@ -11,19 +11,18 @@ class EventQueue{
         this.events = []
     }
 
-    //event with a return type(sort of)
-    startDiscovery(data: any, cb: (cbdata: any) => void) {
-        // this.listen('discoverreturn',cb)
-        this.addAndTrigger('discover',{data,cb})
-    }
-
-    listenDiscovery(megacb:(data:any,cb:(cbdata:any) => void) => void){
-        this.listen('discover',(dataAndCb:{data:any,cb:(ads:any) => void}) => {
-            
+    listenDiscovery(type:string,megacb:(data:any,cb:(cbdata:any) => void) => void){
+        this.listen(type,(dataAndCb:{data:any,cb:(ads:any) => void}) => {
             megacb(dataAndCb.data,dataAndCb.cb)
-
         })
     }
+
+    //event with a return type(sort of)
+    startDiscovery(type:string,data: any, cb: (cbdata: any) => void) {
+        // this.listen('discoverreturn',cb)
+        this.addAndTrigger(type,{data,cb})
+    }
+
 
 
     listen(type:string,cb:(data:any) => void){
