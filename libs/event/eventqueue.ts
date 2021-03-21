@@ -1,6 +1,7 @@
 
 class EventQueue{
-    
+
+    discoveryidcounter = 0
     idcounter = 0
     listeners:{id:number, type: string; cb: (data: any) => void; }[]
     events:{type:string,data:any}[]
@@ -11,18 +12,42 @@ class EventQueue{
         this.events = []
     }
 
-    listenDiscovery(type:string,megacb:(data:any,cb:(cbdata:any) => void) => void){
-        this.listen(type,(dataAndCb:{data:any,cb:(ads:any) => void}) => {
-            megacb(dataAndCb.data,dataAndCb.cb)
+    // listenDiscovery(type:string,megacb:(data:any,cb:(cbdata:any) => void) => void){
+    //     this.listen(type,(dataAndCb:{data:any,cb:(ads:any) => void}) => {
+    //         megacb(dataAndCb.data,dataAndCb.cb)
+    //     })
+    // }
+
+    // startDiscovery(type:string,data: any, cb: (cbdata: any) => void) {
+    //     this.addAndTrigger(type,{data,cb})
+    // }
+
+
+    listenDiscovery(type: string, cb: (data: any, id: any) => void) {
+        this.listen(type,(discovery) => {
+            cb(discovery.data,discovery.id)
         })
     }
 
-    //event with a return type(sort of)
-    startDiscovery(type:string,data: any, cb: (cbdata: any) => void) {
-        // this.listen('discoverreturn',cb)
-        this.addAndTrigger(type,{data,cb})
+
+    
+    startDiscovery(type: string, data: any, cb: (cbdata: any) => void) {
+        let createdid = this.discoveryidcounter++
+        
+        let listenerid = this.listen('completediscovery',(discovery:{data,id}) => {
+            if(discovery.id == createdid){
+                this.unlisten(listenerid)
+                cb(discovery.data)
+            }
+        })
+        this.addAndTrigger(type,{data,id: createdid})
     }
 
+    completeDiscovery(data: any, id: any) {
+        this.addAndTrigger('completediscovery',{data,id})
+    }
+
+    
 
 
     listen(type:string,cb:(data:any) => void){
